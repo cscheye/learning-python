@@ -21,6 +21,28 @@ class Node:
 
     return current.val == sought_val
 
+  def length(self):
+    count = 1
+
+    current = self
+    while current.next != None:
+      count += 1
+      current = current.next
+
+    return count
+
+  def dedupe(self):
+    found = {self.val}
+
+    current = self
+    while current.next != None:
+      if current.next.val in found:
+        current.next = current.next.next
+      else:
+        found.add(current.next.val)
+        current = current.next
+
+    return self
 
 class NodeTest(unittest.TestCase):
   def setUp(self):
@@ -49,6 +71,24 @@ class NodeTest(unittest.TestCase):
       self.assertTrue(self.root.find(val))
 
     self.assertFalse(self.root.find(123455))
+
+  def test_length(self):
+    vals = [1,2,3]
+    for val in vals:
+      self.root.append(val)
+
+    self.assertEqual(self.root.length(), 4)
+
+  def test_dedupe(self):
+    vals = [1,1,1]
+    for val in vals:
+      self.root.append(val)
+
+    # before
+    self.assertEqual(self.root.length(), 4)
+    self.root.dedupe()
+    #after
+    self.assertEqual(self.root.length(), 2)
 
 
 
